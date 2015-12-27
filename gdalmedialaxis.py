@@ -36,7 +36,7 @@ def readRaster(input_raster, n_band=1, nodata_val=-9999):
 
     return data
 
-def writeRaster(out_raster, src_raster, n_band=1, skel_data, nodata_val=0):
+def writeRaster(out_raster, src_raster, skel_data, n_band=1, nodata_val=0):
     drv_gtif = gdal.GetDriverByName("GTiff")
     src_ds = gdal.Open(src_raster)
     dst_raster = drv_gtif.CreateCopy(out_raster, src_ds, 0, options=["COMPRESS=LZW"])
