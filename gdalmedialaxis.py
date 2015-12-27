@@ -23,9 +23,9 @@ from osgeo import gdal
 from skimage.morphology import medial_axis
 
 
-def readRaster(input_raster, nodata_val=-9999):
+def readRaster(input_raster, n_band=1, nodata_val=-9999):
     src_raster = gdal.Open(input_raster)
-    raster_bnd = src_raster.GetRasterBand(1)
+    raster_bnd = src_raster.GetRasterBand(n_band)
     raster_values = raster_bnd.ReadAsArray()
 
     data = raster_values != nodata_val
@@ -36,6 +36,20 @@ def readRaster(input_raster, nodata_val=-9999):
 
     return data
 
+def writeRaster(out_raster, src_raster, n_band=1, skel_data, nodata_val=0):
+    drv_gtif = gdal.GetDriverByName("GTiff")
+    src_ds = gdal.Open(src_raster)
+    dst_raster = drv_gtif.CreateCopy(out_raster, src_ds, 0, options=["COMPRESS=LZW"])
+
+    out_band = dst_raster.GetRasterBand(n_band)
+    out_band.SetNoDataValue(nodata_val)
+    out_band.WriteArray(skel_data)
+
+    src_ds = None
+    dst_raster = None
+    
+    print("New raster created...")
+
 def computeSkeleton(data):
     skel, dist = medial_axis(data, return_distance=True)
 
@@ -45,26 +59,13 @@ def computeSkeleton(data):
 
     return(skel, dist, dist_on_skel)
 
-def writeRaster(out_raster, src_raster, skel_data, nodata_val=0):
-    drv_gtif = gdal.GetDriverByName("GTiff")
-    src_ds = gdal.Open(src_raster)
-    dst_raster = drv_gtif.CreateCopy(out_raster, src_ds, 0, options=["COMPRESS=LZW"])
-
-    out_band = dst_raster.GetRasterBand(1)
-    out_band.SetNoDataValue(nodata_val)
-    out_band.WriteArray(skel_data)
-
-    dst_raster = None
-    
-    print("New raster created...")
-
 def getSkeleton(input_raster, out_raster):
     data = readRaster(input_raster)
     skel_data, dist, dist_on_skel = computeSkeleton(data)
     writeRaster(out_raster, input_raster, skel_data)
 
 if __name__ == "__main__":
-    input_raster = "/tmp/input_raster.tif"
+    input_raster = "./data/input_raster.tif"
     out_raster = "/tmp/medial_axis.tif"
 
     getSkeleton(input_raster, out_raster)
