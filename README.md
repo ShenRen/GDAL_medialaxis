@@ -2,7 +2,9 @@
 Computing medial axis with Scikit-image and GDAL.
 
 ## Requeriments
-- scikit-image: http://scikit-image.org/
+- Numpy: http://www.numpy.org/
+- Pandas: http://pandas.pydata.org/
+- Scikit-image: http://scikit-image.org/
 - GDAL: http://www.gdal.org/
 
 ##About author
