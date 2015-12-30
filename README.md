@@ -1,6 +1,10 @@
 # GDAL medial axis
 Computing medial axis with Scikit-image and GDAL.
 
+Output:
+- GeoTiff file.
+- XYZ file (csv-like).
+
 ## Requeriments
 - Numpy: http://www.numpy.org/
 - Pandas: http://pandas.pydata.org/
