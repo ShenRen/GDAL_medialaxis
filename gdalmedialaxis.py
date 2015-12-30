@@ -32,12 +32,12 @@ def raster2xyz(input_raster, out_xyz, n_band=1, flt_val=1):
 
     gtr = src_raster.GetGeoTransform()
 
-    y, x = np.where(raster_values == 1)
+    y, x = np.where(raster_values == flt_val)
 
     gtr_x = gtr[0] + (x + 0.5) * gtr[1] + (y + 0.5) * gtr[2]
     gtr_y = gtr[3] + (x + 0.5) * gtr[4] + (y + 0.5) * gtr[5]
 
-    data_vals = np.extract(raster_values == 1, raster_values)
+    data_vals = np.extract(raster_values == flt_val, raster_values)
 
     data_dict = {
         "x": gtr_x,
